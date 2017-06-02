@@ -30,6 +30,11 @@ class Generator(df, loc_dict):
       self._accessory = self.df.loc[ lc(self.loc_dict['time'])
       self._dcheck = None
       self._week = None
+      self._start = None
+      self._end = None
+      self.main_f = None
+      self.ref = None
+      self.accessory = None
 
     def date_finder():
     '''Returns the current week'''
@@ -42,48 +47,48 @@ class Generator(df, loc_dict):
     
     def start_end():
     '''Returns week start and end dates'''
-      week_d = dcheck.copy()
       wdiff = int(week)-1
-      week_d['Start'] = week_d['Start'] + dt.timedelta(weeks = wdiff)
-      week_d['End'] = week_d['End'] + dt.timedelta(weeks = wdiff)
-      start = week_d['Start'][1].strftime('%m/%d/%Y')
-      end = week_d['End'][1].strftime('%m/%d/%Y')
+      self._dcheck['Start'] = self._dcheck['Start'] + dt.timedelta(weeks = wdiff)
+      self._dcheck['End'] = self._dcheck['End'] + dt.timedelta(weeks = wdiff)
+      self._start = week_d['Start'][1].strftime('%m/%d/%Y')
+      self._end = week_d['End'][1].strftime('%m/%d/%Y')
 
     def main_gen():
     '''Generates main workout + subsets for correct week'''
-      main.columns = main.iloc[0]
-      main = main.reset_index(drop = True)
-      main.columns.name = None
-      main[main==""] = None
-      main.fillna(method='ffill', inplace = True)
-      main_f = main[main['Week:'].str.contains(week)]
-      main_f = main_f.drop('Week:', 1)
+      self._main.columns = self._main.iloc[0]
+      self._main = self._main.reset_index(drop = True)
+      self._main.columns.name = None
+      self._main[self._main==""] = None
+      self._main.fillna(method='ffill', inplace = True)
+
+      self._main_f = self.main[self.main['Week:'].str.contains(week)]
+      self._main_f = self._main_f.drop('Week:', 1)
 
     def ref_gen():
     '''
     Generates workout reference sheet
     '''
-      workout = main_f.iloc[:, 1:]
-      workout = workout.applymap(lambda x: int(x.split(' lb', 1)[0]))
-      wstacked = pd.DataFrame(workout.stack()).reset_index()
-      wstacked = wstacked[['level_1', 'level_0', 0]]
-      wstacked.columns = [['Exercise', 'Set', 'Weight']]
-      wstacked['Set'] = wstacked['Set']
-      wstacked['Weight (no bar)'] = wstacked['Weight'] - 45
-      wstacked['Weight (each side)'] = -(wstacked['Weight (no bar)'] // -2)
-      wstacked = wstacked.sort_values('Exercise').reset_index(drop = True)
+      self._ref = self._main_f.iloc[:, 1:]
+      self._ref = self._ref.applymap(lambda x: int(x.split(' lb', 1)[0]))
+      self._ref = pd.DataFrame(self._ref.stack()).reset_index()
+      self._ref = self._ref[['level_1', 'level_0', 0]]
+      self._ref.columns = [['Exercise', 'Set', 'Weight']]
+      self._ref['Set'] = self._ref['Set']
+      self._ref['Weight (no bar)'] = self._ref['Weight'] - 45
+      self._ref['Weight (each side)'] = -(self._ref['Weight (no bar)'] // -2)
+      self._ref = self._ref.sort_values('Exercise').reset_index(drop = True)
 
     def accessory_gen():
     '''
     Generates final accessory workout DF
     '''
-      accessory = andmatt.loc[21:26, 3:6]
-      accessory.columns = main.columns[2:6]
-      accessory.iloc[1:].reset_index(drop = True)
-      accessory.columns.name = None
+      self._accessory.columns = self._main.columns[2:6]
+      self._accessory.iloc[1:].reset_index(drop = True)
+      self._accessory.columns.name = None
+      self.accessory = self._accessory
 
 #HTML Generator
-a_html = (accessory.style
+a_html = (self.accessory.style
         .set_properties(**{'text-align': 'center',
                           'border':'1px solid',
                           'border-collapse': 'collapse',
@@ -91,13 +96,13 @@ a_html = (accessory.style
         .applymap(recolor, subset = pd.IndexSlice[[21,23,25],]))
 a_html = a_html.render()
 
-m_html = main_f.style.set_properties(**{'text-align': 'center',
+m_html = self.main_f.style.set_properties(**{'text-align': 'center',
                                        'border':'1px solid',
                                        'border-collapse': 'collapse',
                                        'border-color': 'slategray'})
 m_html = m_html.render()
 
-r_html = wstacked.style.set_properties(**{'text-align': 'center',
+r_html = self.ref.style.set_properties(**{'text-align': 'center',
                                        'border':'1px solid',
                                        'border-collapse': 'collapse',
                                        'border-color': 'slategray'})
