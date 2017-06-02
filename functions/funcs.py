@@ -2,6 +2,7 @@ import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime as dt
+import string
 
 def google_sheet_pull(sheet, name, token):
     '''
@@ -15,6 +16,17 @@ def google_sheet_pull(sheet, name, token):
     df = client.open(sheet).worksheet(name)
     df = pd.DataFrame(df.get_all_values())
     return df
+
+def loc_convert(locs):
+  '''
+  Converts location dictionary from google doc rows/columns to a string to use directly with ".loc"
+  '''
+  a = str(locs[2]-1)
+  b = str(locs[3]-1)
+  c = string.ascii_lowercase.index(locs[0])
+  d = string.ascii_lowercase.index(locs[1])
+  index = a + ':' + b + ', ' + str(c) + ':'+ str(d)
+  return index
 
 def recolor(val):
     '''
