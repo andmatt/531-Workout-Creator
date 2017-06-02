@@ -17,22 +17,26 @@ def google_sheet_pull(sheet, name, token):
     df = pd.DataFrame(df.get_all_values())
     return df
 
-def loc_convert(locs):
-  '''
-  Converts location dictionary from google doc rows/columns to a string to use directly with ".loc"
-  '''
-  a = str(locs[2]-1)
-  b = str(locs[3]-1)
-  c = string.ascii_lowercase.index(locs[0])
-  d = string.ascii_lowercase.index(locs[1])
-  index = a + ':' + b + ', ' + str(c) + ':'+ str(d)
-  return index
+
+def loc_convert(df, locs):
+    '''
+    Converts location dictionary from google doc rows/columns to values to use directly with iloc
+    subsets full dataset based on new values
+    '''
+    a = int(locs[2]+1)
+    b = int(locs[3]+1)
+    c = string.ascii_lowercase.index(locs[0])
+    d = string.ascii_lowercase.index(locs[1])
+    df = df.iloc[a:b, c:d]
+    return df
+
 
 def recolor(val):
     '''
     adds css color elements to df
     '''
     return 'color: white ; background-color: lightskyblue'
+
 
 def week_finder(dcheck):
     '''
