@@ -7,9 +7,11 @@ This project is designed to simplify the popular Wendler 5-3-1 workout. The work
 Due to the nature of the workout, it's a little difficult to keep track of weights (due to the fact that all weights are calculated as %tages of your one rep max). This project is designed to simplify that process so the focus can shift from figuring out your weekly weights, to getting those gains.
 
 ## **To do List:**
-1. Class rollups / General code optimizations
-2. Incorporate final output table for easy weight references for core exercies
+1. ~~Class rollups~~
+2. ~~Incorporate final output table for easy weight references for core exercies~~
 3. Support workout generation for multiple users
 4. Automatically run on a weekly cadence
 5. Standardize google sheets format for easy editing of accessory workouts
 6. Refactor Accessory Workout generator for additional flexibility
+7. Add Exceptions
+8. Code Optimizations
