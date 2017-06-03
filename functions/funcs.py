@@ -1,7 +1,8 @@
+import datetime as dt
+import string
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
-import datetime as dt
 
 def google_sheet_pull(sheet, name, token):
     '''
@@ -16,11 +17,28 @@ def google_sheet_pull(sheet, name, token):
     df = pd.DataFrame(df.get_all_values())
     return df
 
+
+def loc_convert(df, locs):
+    '''
+    Converts location dictionary from google doc rows/columns to values to use directly with iloc
+    subsets full dataset based on new values
+    +1 because .iloc is not inclusive
+    -1 becaues index is adds an extra 0 row
+    '''
+    a = int(locs[2]-1)
+    b = int(locs[3])
+    c = string.ascii_lowercase.index(locs[0])
+    d = string.ascii_lowercase.index(locs[1])+1
+    df = df.iloc[a:b, c:d]
+    return df
+
+
 def recolor(val):
     '''
     adds css color elements to df
     '''
     return 'color: white ; background-color: lightskyblue'
+
 
 def week_finder(dcheck):
     '''
