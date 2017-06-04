@@ -9,7 +9,7 @@ Due to the nature of the workout, it's a little difficult to keep track of weigh
 ## **To do List:**
 1. ~~Class rollups~~
 2. ~~Incorporate final output table for easy weight references for core exercies~~
-3. Support workout generation for multiple users
+3. ~~Support workout generation for multiple users~~
 4. Automatically run on a weekly cadence
 5. Standardize google sheets format for easy editing of accessory workouts
 6. Refactor Accessory Workout generator for additional flexibility

@@ -42,6 +42,7 @@ class Generator:
 
         self._main_f = self._main[self._main['Week:'].str.contains(self._week)]
         self._main_f = self._main_f.drop('Week:', 1)
+        self._main_f.index = [1,2,3]
 
     def ref_gen(self):
         '''
@@ -75,6 +76,9 @@ class Generator:
         self.accessory_gen()
         self.output_dict = {'main': self._main_f,
                             'ref': self._ref,
-                            'accessory': self._accessory}
-        return self.output_dict
+                            'accessory': self._accessory,
+                            'week': self._week,
+                            'start': self._start,
+                            'end': self._end}
         print('success')
+        return self.output_dict
