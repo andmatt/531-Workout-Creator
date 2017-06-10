@@ -1,10 +1,3 @@
-import datetime as dt
-import string
-
-import gspread
-import pandas as pd
-from oauth2client.service_account import ServiceAccountCredentials
-
 from functions.funcs import loc_convert as lc
 from functions.funcs import google_sheet_pull, recolor, week_finder
 from functions.outputclass import Generator
