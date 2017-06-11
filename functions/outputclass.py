@@ -17,25 +17,28 @@ class Generator:
 
     def date_finder(self):
         '''Returns the current week'''
-        self._names = self._time.iloc[0, 0:6].tolist() + ['End', 'Tag']
-        self._time.columns = self._names
+        self._time.columns = self._time.iloc[0]
         self._time = self._time.reset_index(drop=True).iloc[1:]
+        self._time.columns.name = None
         self._dcheck = self._time[self._time.Tag=='1'][['Start', 'End']]
         self._dcheck = self._dcheck.apply(pd.to_datetime, axis=1)
         self._week = week_finder(self._dcheck)
     
     def start_end(self):
         '''Returns week start and end dates'''
-        wdiff = int(self._week)-1
-        self._dcheck['Start'] = self._dcheck['Start'] + dt.timedelta(weeks = wdiff)
-        self._dcheck['End'] = self._dcheck['End'] + dt.timedelta(weeks = wdiff)
-        self._start = self._dcheck['Start'][1].strftime('%m/%d/%Y')
-        self._end = self._dcheck['End'][1].strftime('%m/%d/%Y')
+        if int(self._week) >1:
+            wdiff = int(self._week)-1
+        else:
+            wdiff = 0
+        self._dcheck['W_Start'] = self._dcheck['Start'] + dt.timedelta(weeks = wdiff)
+        self._dcheck['W_End'] = self._dcheck['W_Start'] + dt.timedelta(days = 6)
+        self._start = self._dcheck['W_Start'][1].strftime('%m/%d/%Y')
+        self._end = self._dcheck['W_End'][1].strftime('%m/%d/%Y')
 
     def main_gen(self):
         '''Generates main workout + subsets for correct week'''
         self._main.columns = self._main.iloc[0]
-        self._main = self._main.reset_index(drop = True)
+        self._main = self._main.reset_index(drop = True).iloc[1:]
         self._main.columns.name = None
         self._main[self._main==""] = None
         self._main.fillna(method='ffill', inplace = True)

@@ -50,6 +50,8 @@ def week_finder(dcheck):
         today = dt.datetime.today()
         start = dcheck['Start'] + dt.timedelta(weeks = x-1)
         end = dcheck['Start'] + dt.timedelta(weeks = x)
+        if (today < start).any():
+            return '1'
         if ((today >= start) & (today <= end)).any():
             return(str(x))
         if (today>dcheck['Start'] + dt.timedelta(weeks = 4)).any():

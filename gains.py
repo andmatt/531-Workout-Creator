@@ -6,7 +6,7 @@ from functions.htmlclass import HtmlMaker
 #First you need to pull the entire sheet for each user
 token = 'C:/Users/Matt/Documents/Secure/client_secret.json'
 sheet = '5-3-1 Workout Weights'
-names = ['Matt', 'Kri']
+names = ['Kri', 'Matt']
 
 #Blank dictionary that will store the initial sheet pulls as well as all output dfs
 sheet_dict = {}
