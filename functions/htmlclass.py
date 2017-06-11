@@ -15,12 +15,13 @@ class HtmlMaker:
                 ref1 = '{}_output'.format(x)
                 ref2 = '{}_html'.format(y)
                 if y == 'accessory':                    
+                    pos = [x for x in self.dict[ref1][y].index.tolist() if x % 2 == 1]
                     self.dict[ref1][ref2] = (self.dict[ref1][y].style
                     .set_properties(**{'text-align': 'center',
                     'border':'1px solid',
                     'border-collapse': 'collapse',
                     'border-color': 'slategray'})
-                    .applymap(recolor, subset = pd.IndexSlice[[21,23,25],])).render()
+                    .applymap(recolor, subset = pd.IndexSlice[pos,])).render()
                 else:
                     self.dict[ref1][ref2] = (self.dict[ref1][y].style
                     .set_properties(**{'text-align': 'center',
